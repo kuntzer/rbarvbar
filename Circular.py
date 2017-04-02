@@ -1,0 +1,54 @@
+from rbarvbar import sat, lvlh, plots
+
+from matplotlib import rc
+rc('font',**{'size': 14})
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+#rc('font', **{'family':'sans-serif','sans-serif':['DevaVu Sans']})
+rc('text', usetex=True)
+	
+###################################################################################################
+# Selecting options
+
+import inspect
+
+
+# time interval 
+dt = 0.05
+save_every = 3.
+n_orbits_to_save = 4.98
+
+# Target 
+tgt = sat.Satellite(400, 400, "TGT")
+tgt.set_init_pos(true_anomaly=0)
+# Chaser
+chaser = sat.Satellite(350, 350, "Chaser")
+chaser.set_init_pos(true_anomaly=1.2)
+
+###################################################################################################
+# Running the code
+
+t = 0
+nit = int(n_orbits_to_save * chaser.P / dt)
+sen = save_every / dt 
+
+distances = lvlh.LVLH(tgt, chaser)
+
+
+for ii in range(nit):
+	
+	t = ii * dt
+	
+	if ii % sen == 0:
+		do_save_state = True
+	else:
+		do_save_state = False
+
+	tgt.step(dt, do_save_state)
+	chaser.step(dt, do_save_state)
+	if do_save_state:
+		distances.compute_distances()
+
+outdir = (inspect.stack()[0][1].split("/")[-1]).split(".py")[0]
+pl = plots.Plot(tgt, chaser, distances, dt*sen, outdir=outdir)
+pl.plot(time_ticks=10)
+pl.make_movie(name=outdir)
