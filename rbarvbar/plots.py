@@ -105,6 +105,7 @@ class Plot():
 			ax1.plot(t, vtgt, c='k', label=self.target.name)
 			ax1.plot(t, vcha, c='r', label=self.chaser.name)
 			xmin1, xmax1 = ax1.get_xlim()
+			ymin1, ymax1 = ax1.get_ylim()
 			ax1.scatter(t[ii], vtgt[ii], c='k')
 			ax1.scatter(t[ii], vcha[ii], c='r')			
 			#ax1.plot(t, vcha-vtgt, c='b', label=r"$\Delta v$")
@@ -113,6 +114,7 @@ class Plot():
 			ax1.set_ylabel(r"$v\,\mathrm{[km/s]}$")
 			ax1.grid()
 			ax1.set_xlim([xmin1, xmax1])
+			ax1.set_xlim([ymin1, ymax1])
 			
 			ax2 = fig.add_subplot(gs[2:,0])
 			ax2.set_aspect("equal")
@@ -144,6 +146,8 @@ class Plot():
 			ax3.scatter(t[ii], v_bar[ii], c='gold')
 			ax3.scatter(t[ii], vz_bar[ii], c='g')
 			ax3.set_xlim([xmin1, xmax1])
+			ymin3, ymax3 = ax3.get_ylim()
+			ax3.set_xlim([ymin3, ymax3])
 			ax3.legend()
 			ax3.grid()
 			ax3.axhline(0, c='k', ls='--')
@@ -167,6 +171,9 @@ class Plot():
 			
 			xmin, xmax = ax4.get_xlim()
 			ymin, ymax = ax4.get_ylim()
+			
+			# For correctly plotting the vbar axis
+			ax4.plot([0], [0], c='k')
 			
 			if t[ii] > 1 and highlight_new_orbit:
 				ax4.axvline(-self.distances.trajectory_x[0], c='k', ls='--')
