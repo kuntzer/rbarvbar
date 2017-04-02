@@ -114,7 +114,7 @@ class Plot():
 			ax1.set_ylabel(r"$v\,\mathrm{[km/s]}$")
 			ax1.grid()
 			ax1.set_xlim([xmin1, xmax1])
-			ax1.set_xlim([ymin1, ymax1])
+			ax1.set_ylim([ymin1, ymax1])
 			
 			ax2 = fig.add_subplot(gs[2:,0])
 			ax2.set_aspect("equal")
@@ -147,7 +147,7 @@ class Plot():
 			ax3.scatter(t[ii], vz_bar[ii], c='g')
 			ax3.set_xlim([xmin1, xmax1])
 			ymin3, ymax3 = ax3.get_ylim()
-			ax3.set_xlim([ymin3, ymax3])
+			ax3.set_ylim([ymin3, ymax3])
 			ax3.legend()
 			ax3.grid()
 			ax3.axhline(0, c='k', ls='--')

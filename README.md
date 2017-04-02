@@ -8,3 +8,8 @@ The different scripts correspond to different configurations of the chaser orbit
 Note that this tool is limited to circular orbit for the target.
 
 See that paper for historical examples: [Rendezvous and Proximity Operations of the Space Shuttle 5](https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/20070018243.pdf)
+
+## TODOs
+
+- Better ODE numerical integration (currently no stability)
+- A better positionning of the text "1 orbit = ...".
