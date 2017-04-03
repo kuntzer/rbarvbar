@@ -1,5 +1,11 @@
 # Rbar - vbar plots
 
+## The code
+
+Written by Thibault Kuntzer (thibault.kuntzer@epfl.ch)
+Download here: https://github.com/kuntzer/rbarvbar
+
+
 ## Orbital rendezvous plots
 
 This small tools computes the trajectory of a chaser and of a target to generate a vbar - rbar plot.
@@ -13,3 +19,4 @@ See that paper for historical examples: [Rendezvous and Proximity Operations of 
 
 - Better ODE numerical integration (currently no stability)
 - A better positionning of the text "1 orbit = ...".
+- Possibility to include Delta v
