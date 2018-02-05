@@ -141,8 +141,8 @@ class Plot():
 			
 			ax3 = fig.add_subplot(gs[1, 1:])#, sharex=ax1)
 			ax3.set_xlabel(r"$\mathrm{Time\,[Orbits\,of\,chaser]}$")
-			ax3.plot(t, v_bar, c='gold', label=r"$\bar{v}$")
-			ax3.plot(t, vz_bar, c='g', label=r"$v_R$")
+			ax3.plot(t, v_bar*1e3, c='gold', label=r"$\bar{v}$")
+			ax3.plot(t, vz_bar*1e3, c='g', label=r"$v_R$")
 			ymin3, ymax3 = ax3.get_ylim()
 			ax3.scatter(t[ii], v_bar[ii], c='gold')
 			ax3.scatter(t[ii], vz_bar[ii], c='g')
@@ -151,7 +151,7 @@ class Plot():
 			ax3.legend()
 			ax3.grid()
 			ax3.axhline(0, c='k', ls='--')
-			ax3.set_ylabel(r"$\bar{v},\,v_R\,\mathrm{[km/s]}$")
+			ax3.set_ylabel(r"$\bar{v},\,v_R\,\mathrm{[m/s]}$")
 			
 			ax4 = fig.add_subplot(gs[2:,1:])
 			
@@ -193,7 +193,7 @@ class Plot():
 			gs.update(wspace=0.05, hspace=0.3)
 			
 
-			plt.suptitle(txtch + r"$\quad$--$\quad$" + txttgt + r"$\quad$--$\quad$" + "Time {:3d} min".format(int(self.dt*ii/60.)))
+			plt.suptitle(txtch + r"$\quad$--$\quad$" + txttgt + r"$\quad$--$\quad$" + "Time {:03d} min".format(int(self.dt*ii/60.)))
 			
 			if not os.path.exists(self.outdir):
 				os.mkdir(self.outdir)

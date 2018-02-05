@@ -37,7 +37,7 @@ distances = lvlh.LVLH(tgt, chaser)
 for ii in range(nit):
 	
 	t = ii * dt
-	
+
 	if ii % sen == 0:
 		do_save_state = True
 	else:

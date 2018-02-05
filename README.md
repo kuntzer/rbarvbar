@@ -2,7 +2,7 @@
 
 ## The code
 
-Written by Thibault Kuntzer (thibault.kuntzer@epfl.ch)
+Written by Thibault Kuntzer (thibault.kuntzer@ssvnn.net).
 Download here: https://github.com/kuntzer/rbarvbar
 
 

@@ -2,6 +2,7 @@ import numpy as np
 
 import constants
 import utils
+from scipy import integrate
 
 class Satellite():
 	
@@ -22,6 +23,11 @@ class Satellite():
 		self.y = None
 		self.u = None
 		self.v = None
+		
+		self.utmdt = None
+		self.vtmdt = None
+		
+		self.t = 0
 		
 		self.reset_mem()
 		
@@ -65,31 +71,78 @@ class Satellite():
 		self.u = self.V * np.cos(beta)
 		self.v = self.V * np.sin(beta)
 		
+		self.x2 = self.x
+		self.y2 = self.y
+		self.u2 = self.u
+		self.v2 = self.v
+		
 		self.save_state()
 
-	def step(self, dt, save_state=True):
-		
-		# Very very simple integration
-		# TODO: Do much better, too much deviation!
-		d = np.hypot(self.x, self.y)
-		a = -constants.muE / d / d / d
-		
-		#du = utils.RK4(lambda x, u: a * x)
-		#dv = utils.RK4(lambda y, v: a * y)
+	def step(self, dt, save_state=True, integration_method='leapfrog'):
 
-		#du = utils.RK4(lambda x, u: self.x)
-		#dv = utils.RK4(lambda x, u: self.y)
+		if integration_method == 'leapfrog':
+			"""
+			Works great, see here why: https://introcs.cs.princeton.edu/java/94diffeq/
+			"""
+			
+			d = np.hypot(self.x, self.y)
+			a = -constants.muE / d / d / d
+			
+			if self.utmdt is None or self.vtmdt is None:
+				self.utmdt = self.u + a * self.x * -dt/2.
+				self.vtmdt = self.v + a * self.y * -dt/2.
+
+			ax = a * self.x 
+			ay = a * self.y
+			
+			utpdt = self.utmdt + ax * dt
+			vtpdt = self.vtmdt + ay * dt
+			
+			self.x += utpdt * dt 
+			self.y += vtpdt * dt
+			
+			self.u = (self.utmdt + utpdt) / 2.
+			self.v = (self.vtmdt + vtpdt) / 2.
+			
+			self.utmdt = utpdt
+			self.vtmdt = vtpdt
+			
+		elif integration_method=='euler-r':
+			"""
+			Euler in polar coordinates
+			Bad because of the many trigo computations
+			"""
+			r = np.hypot(self.x, self.y)
+			_, theta = utils.cart2polar(self.u, self.v)
 		
-		#self.u-= du(a, self.u, dt)
-		#self.v -= dv(a, self.v, dt)
-		#ax = -F * self.x 
-		#ay = -F * self.y
+			rp = -np.sin(theta) * self.u + np.cos(theta) * self.v
+
+			rp -= constants.muE / (r * r) * dt
+			
+			du, dv = utils.polar2cart(rp, np.pi/2.+theta)
+
+			self.u += du
+			self.v += dv 
 		
-		self.u += a * self.x * dt
-		self.v += a * self.y * dt
+			self.x += self.u * dt
+			self.y += self.v * dt
 		
-		self.x += self.u * dt 
-		self.y += self.v * dt
+		elif integration_method == 'euler':
+			"""
+			Okay, but not great
+			"""
+		
+			d = np.hypot(self.x, self.y)
+			a = -constants.muE / d / d / d
+		
+			self.u += a * self.x * dt
+			self.v += a * self.y * dt
+		
+			self.x += self.u * dt 
+			self.y += self.v * dt
+		
+
+
 		
 		if save_state: 
 			self.save_state()

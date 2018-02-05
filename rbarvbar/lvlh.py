@@ -30,7 +30,6 @@ class LVLH():
 		v1 = np.array([self.target.x, self.target.y])
 		v2 = np.array([self.chaser.x, self.chaser.y])
 		
-		
 		delta_angle = utils.angle_between(v1, v2)
 		
 		dx = 2e-3 * np.pi * (constants.radiusE + self.target.get_alt() * 1e3) * delta_angle / (2. * np.pi)
@@ -60,3 +59,4 @@ class LVLH():
 			self.save_state(dx, dy)
 		
 		return dx, dy
+	
