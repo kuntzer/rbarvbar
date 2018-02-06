@@ -17,6 +17,4 @@ See that paper for historical examples: [Rendezvous and Proximity Operations of 
 
 ## TODOs
 
-- Better ODE numerical integration (currently no stability)
-- A better positionning of the text "1 orbit = ...".
-- Possibility to include Delta v
+- Possibility to execute Delta v mid flight

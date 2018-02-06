@@ -6,9 +6,12 @@ import os
 import constants
 import utils as u
 
+from matplotlib import rc
+
+
 class Plot():
 	
-	def __init__(self, target, chaser, distances, dt, outdir="outputs"):
+	def __init__(self, target, chaser, distances, dt, outdir="outputs",txtsize=16):
 		
 		self.target = target 
 		self.chaser = chaser
@@ -21,6 +24,17 @@ class Plot():
 		# Prep'ing the one-orbit trajectory
 		self.idtgt = int(np.ceil(self.target.P / self.dt)*1.01)
 		self.idch = int(np.ceil(self.chaser.P / self.dt)*1.01) 
+		
+		# Selecting the font
+		rc('font',**{'family':'serif','serif':['Palatino'],'size':txtsize})
+		rc('text', usetex=True)
+		self.txtsize = txtsize
+		
+		self.ax4_xmin = None
+		self.ax4_xmax = None
+		self.ax4_ymin = None
+		self.ax4_ymax = None
+
 		
 	def plot(self, time_ticks=1, save=True, highlight_new_orbit=True):
 		"""
@@ -75,9 +89,9 @@ class Plot():
 			#if ii > len(self.target.speed_x): continue
 	
 			fig = plt.figure(figsize=(18,10))
-			plt.subplots_adjust(wspace=0.0)
-			plt.subplots_adjust(bottom=0.04)
-			plt.subplots_adjust(top=0.92)
+			plt.subplots_adjust(wspace=0.)
+			plt.subplots_adjust(bottom=0.01)
+			plt.subplots_adjust(top=0.95)
 			plt.subplots_adjust(right=0.98)
 			plt.subplots_adjust(left=0.)
 			
@@ -109,7 +123,7 @@ class Plot():
 			ax1.scatter(t[ii], vtgt[ii], c='k')
 			ax1.scatter(t[ii], vcha[ii], c='r')			
 			#ax1.plot(t, vcha-vtgt, c='b', label=r"$\Delta v$")
-			ax1.legend()
+			ax1.legend(fontsize=self.txtsize - 2)
 			ax1.xaxis.set_ticklabels([])
 			ax1.set_ylabel(r"$v\,\mathrm{[km/s]}$")
 			ax1.grid()
@@ -140,15 +154,15 @@ class Plot():
 			ax2.axis('off')
 			
 			ax3 = fig.add_subplot(gs[1, 1:])#, sharex=ax1)
-			ax3.set_xlabel(r"$\mathrm{Time\,[Orbits\,of\,chaser]}$")
+			ax3.set_xlabel("$\mathrm{Time\,[Orbits\,of\,chaser]}$")
 			ax3.plot(t, v_bar*1e3, c='gold', label=r"$\bar{v}$")
 			ax3.plot(t, vz_bar*1e3, c='g', label=r"$v_R$")
 			ymin3, ymax3 = ax3.get_ylim()
-			ax3.scatter(t[ii], v_bar[ii], c='gold')
-			ax3.scatter(t[ii], vz_bar[ii], c='g')
+			ax3.scatter(t[ii], v_bar[ii]*1e3, c='gold')
+			ax3.scatter(t[ii], vz_bar[ii]*1e3, c='g')
 			ax3.set_xlim([xmin1, xmax1])
 			ax3.set_ylim([ymin3, ymax3])
-			ax3.legend()
+			ax3.legend(fontsize=self.txtsize - 2)
 			ax3.grid()
 			ax3.axhline(0, c='k', ls='--')
 			ax3.set_ylabel(r"$\bar{v},\,v_R\,\mathrm{[m/s]}$")
@@ -169,31 +183,40 @@ class Plot():
 			ax4.plot(-np.array(self.distances.trajectory_x), -np.array(self.distances.trajectory_y))
 			ax4.scatter(-np.array(self.distances.trajectory_x)[ii], -np.array(self.distances.trajectory_y)[ii])
 			
-			xmin, xmax = ax4.get_xlim()
-			ymin, ymax = ax4.get_ylim()
-			
 			# For correctly plotting the vbar axis
 			ax4.plot([0], [0], c='k')
+			
+			xmin, xmax = ax4.get_xlim()
+			ymin, ymax = ax4.get_ylim()
 			
 			if t[ii] > 1 and highlight_new_orbit:
 				ax4.axvline(-self.distances.trajectory_x[0], c='k', ls='--')
 				ax4.axvline(-self.distances.trajectory_x[int(np.ceil(self.chaser.P / self.dt))], c='k', ls='--')
 				x4t = -(self.distances.trajectory_x[0] + self.distances.trajectory_x[int(np.ceil(self.chaser.P / self.dt))])/2.
-				y4t = (ymax - ymin) * 0.05 + ymin
-				y4tt = (ymax - ymin) * 0.051 + ymin
+				
+				y4t = (ymax - ymin) * 0.5 + ymin
+				y4tt = (ymax - ymin) * 0.51 + ymin
+
 				ax4.plot([-self.distances.trajectory_x[0], -self.distances.trajectory_x[int(np.ceil(self.chaser.P / self.dt))]], [y4t, y4t], ls='--', c='k')
 				ax4.annotate(r'$1\,\mathrm{orbit\,}\Delta x = 3\pi\Delta a\approx %3.0f\,\mathrm{km}$' % (dxo/1e3), xy=(x4t, y4tt), ha='center')
-			
 			
 			xx = ((1. - xmax / (xmax - xmin)) * 1.005 * (xmax - xmin) + xmin)
 			yy = ((1. - ymax / (ymax - ymin)) * 1.015 * (ymax - ymin) + ymin)
 			ax4.annotate(r'$\bar{v}\,\mathrm{[km]}$', xy=((xmax - xmin) * 0.01 + xmin, yy))
 			ax4.annotate(r'$\bar{R}\,\mathrm{[km]}$', xy=(xx, (ymax - ymin) * 0.02 + ymin))
 			
+			if self.ax4_xmin is None:
+				self.ax4_xmin = xmin
+				self.ax4_xmax = xmax
+				self.ax4_ymin = ymin
+				self.ax4_ymax = ymax
 			gs.update(wspace=0.05, hspace=0.3)
 			
+			ax4.set_xlim([self.ax4_xmin, self.ax4_xmax])
+			ax4.set_ylim([self.ax4_ymin, self.ax4_ymax])
+			
 
-			plt.suptitle(txtch + r"$\quad$--$\quad$" + txttgt + r"$\quad$--$\quad$" + "Time {:03d} min".format(int(self.dt*ii/60.)))
+			plt.suptitle(txtch + r"$\quad$--$\quad$" + txttgt + r"$\quad$--$\quad$" + r"Time {:03d} min".format(int(self.dt*ii/60.)))
 			
 			if not os.path.exists(self.outdir):
 				os.mkdir(self.outdir)
@@ -206,9 +229,9 @@ class Plot():
 			
 			nimg += 1
 			
-	def make_movie(self, name, system="linux"):
+	def make_movie(self, name, system="linux", framerate=25):
 			
 		if system == "linux":
-			os.system("avconv -y -f image2 -i {}/img_%05d.png -c:v libx264 -r 6 -s hd720 -crf 16 {}/{}.mkv".format(self.outdir, self.outdir, name))
+			os.system("avconv -r {} -y -f image2 -i {}/img_%05d.png -c:v libx264 -s hd720 -crf 15 {}/{}.avi".format(framerate, self.outdir, self.outdir, name))
 		else:
 			raise ValueError("Unknown system")

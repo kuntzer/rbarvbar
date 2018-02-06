@@ -1,10 +1,4 @@
 from rbarvbar import sat, lvlh, plots
-
-from matplotlib import rc
-rc('font',**{'size': 14})
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
-#rc('font', **{'family':'sans-serif','sans-serif':['DevaVu Sans']})
-rc('text', usetex=True)
 	
 ###################################################################################################
 # Selecting options
@@ -13,9 +7,9 @@ import inspect
 
 
 # time interval 
-dt = 0.05
+dt = 0.1
 save_every = 3.
-n_orbits_to_save = 1.01
+n_orbits_to_save = 1.0
 
 # Target 
 tgt = sat.Satellite(400, 400, "TGT")
@@ -50,5 +44,5 @@ for ii in range(nit):
 
 outdir = (inspect.stack()[0][1].split("/")[-1]).split(".py")[0]
 pl = plots.Plot(tgt, chaser, distances, dt*sen, outdir=outdir)
-pl.plot(time_ticks=10)
-pl.make_movie(name=outdir)
+pl.plot(time_ticks=4, highlight_new_orbit=False)
+pl.make_movie(name=outdir, framerate=50)

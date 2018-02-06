@@ -1,10 +1,4 @@
 from rbarvbar import sat, lvlh, plots
-
-from matplotlib import rc
-rc('font',**{'size': 14})
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
-#rc('font', **{'family':'sans-serif','sans-serif':['DevaVu Sans']})
-rc('text', usetex=True)
 	
 ###################################################################################################
 # Selecting options
@@ -13,7 +7,7 @@ import inspect
 
 
 # time interval 
-dt = 0.05
+dt = 0.1
 save_every = 3.
 n_orbits_to_save = 4.98
 
