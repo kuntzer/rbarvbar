@@ -61,7 +61,7 @@ class Plot():
 		v_bar = np.zeros_like(aalpha)
 		for jjk in range(len(chxy[0])):
 			try:
-				vb = (self.distances.trajectory_x[jjk-1] - self.distances.trajectory_x[jjk]) / self.dt
+				vb = (self.distances.trajectory_x[jjk-1] - self.distances.trajectory_x[jjk]) / (self.dt)
 			except:
 				vb = np.nan 
 			if jjk == 0:
@@ -70,8 +70,7 @@ class Plot():
 			
 				
 		vz_bar = vch * np.cos(aalpha) * 1e-3
-		
-		v_bar *= dxo / (np.nanmean((v_bar[:self.idch])) * 1e3 * self.chaser.P)
+		#v_bar *= dxo / (np.nanmean((v_bar[:self.idch])) * 1e3 * self.chaser.P)
 		
 		##############################
 		
