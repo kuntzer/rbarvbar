@@ -16,7 +16,7 @@ tgt = sat.Satellite(400, 400, "TGT")
 tgt.set_init_pos(true_anomaly=0)
 # Chaser
 chaser = sat.Satellite(380, 450, "Chaser")
-chaser.set_init_pos(true_anomaly=-3)
+chaser.set_init_pos(true_anomaly=-4.)
 
 ###################################################################################################
 # Running the code

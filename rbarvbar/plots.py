@@ -5,6 +5,7 @@ import os
 
 import constants
 import utils as u
+import lvlh
 
 from matplotlib import rc
 
@@ -46,7 +47,7 @@ class Plot():
 		vcha = np.hypot(self.chaser.speed_x, self.chaser.speed_y) * 1e-3
 		
 		#################################
-		
+
 		chaserspeed = np.array([self.chaser.speed_x, self.chaser.speed_y]).T
 			
 		vch = np.hypot(chaserspeed[:,0], chaserspeed[:,1])# * 1e-3
@@ -154,7 +155,7 @@ class Plot():
 			
 			ax3 = fig.add_subplot(gs[1, 1:])#, sharex=ax1)
 			ax3.set_xlabel("$\mathrm{Time\,[Orbits\,of\,chaser]}$")
-			ax3.plot(t, v_bar*1e3, c='gold', label=r"$\bar{v}$")
+			ax3.plot(t, v_bar*1e3, c='gold', label=r"$\bar{V}$")
 			ax3.plot(t, vz_bar*1e3, c='g', label=r"$v_R$")
 			ymin3, ymax3 = ax3.get_ylim()
 			ax3.scatter(t[ii], v_bar[ii]*1e3, c='gold')
@@ -164,7 +165,7 @@ class Plot():
 			ax3.legend(fontsize=self.txtsize - 2)
 			ax3.grid()
 			ax3.axhline(0, c='k', ls='--')
-			ax3.set_ylabel(r"$\bar{v},\,v_R\,\mathrm{[m/s]}$")
+			ax3.set_ylabel(r"$\bar{V},\,v_R\,\mathrm{[m/s]}$")
 			
 			ax4 = fig.add_subplot(gs[2:,1:])
 			
@@ -201,7 +202,7 @@ class Plot():
 			
 			xx = ((1. - xmax / (xmax - xmin)) * 1.005 * (xmax - xmin) + xmin)
 			yy = ((1. - ymax / (ymax - ymin)) * 1.015 * (ymax - ymin) + ymin)
-			ax4.annotate(r'$\bar{v}\,\mathrm{[km]}$', xy=((xmax - xmin) * 0.01 + xmin, yy))
+			ax4.annotate(r'$\bar{V}\,\mathrm{[km]}$', xy=((xmax - xmin) * 0.01 + xmin, yy))
 			ax4.annotate(r'$\bar{R}\,\mathrm{[km]}$', xy=(xx, (ymax - ymin) * 0.02 + ymin))
 			
 			if self.ax4_xmin is None:
