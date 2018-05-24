@@ -18,3 +18,4 @@ See that paper for historical examples: [Rendezvous and Proximity Operations of 
 ## TODOs
 
 - Possibility to execute Delta v mid flight
+- Possibility to change the central body
